@@ -1,0 +1,50 @@
+const API_BASE = "http://localhost:3000/api";
+
+async function authFetch(url, options = {}, currentUser) {
+  const token = currentUser ? await currentUser.getIdToken() : null;
+
+  const headers = {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+    ...options.headers,
+  };
+
+  const res = await fetch(`${API_BASE}${url}`, { ...options, headers });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Request failed");
+  }
+  return res.json();
+}
+
+export function createRestaurant(data, currentUser) {
+  return authFetch("/restaurants", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }, currentUser);
+}
+
+export function getRestaurants() {
+  return authFetch("/restaurants"); // no auth needed, public route
+}
+
+export function getMenuItems(restaurantId) {
+  return authFetch(`/menu-items/restaurant/${restaurantId}`);
+}
+export function getRestaurant(id) {
+  return authFetch(`/restaurants/${id}`);
+}
+
+export function createOrder(orderData, currentUser) {
+  return authFetch("/orders", {
+    method: "POST",
+    body: JSON.stringify(orderData),
+  }, currentUser); // currentUser can be null — authFetch already handles that (no token attached)
+}
+
+export function createPaymentIntent(amount, currentUser) {
+  return authFetch("/payments/create-payment-intent", {
+    method: "POST",
+    body: JSON.stringify({ amount }),
+  }, currentUser);
+}

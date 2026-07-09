@@ -29,13 +29,20 @@ export function AuthProvider({ children }) {
     return signOut(auth);
   }
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
-    return unsubscribe;
-  }, []);
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    setCurrentUser(user);
+    if (user) {
+      const token = await user.getIdToken();
+      await fetch("http://localhost:3000/api/users/sync", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    }
+    setLoading(false);
+  });
+  return unsubscribe;
+}, []);
 
   const value = { currentUser, signup, login, logout };
 
