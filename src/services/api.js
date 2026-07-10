@@ -71,3 +71,7 @@ export function getAllUsers(currentUser) {
 export function updateUserRole(id, role, currentUser) {
   return authFetch(`/users/${id}/role`, { method: "PUT", body: JSON.stringify({ role }) }, currentUser);
 }
+
+export function getCurrentUserProfile(currentUser) {
+  return authFetch("/users/me", {}, currentUser);
+}

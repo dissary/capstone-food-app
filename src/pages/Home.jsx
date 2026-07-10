@@ -31,22 +31,7 @@ export default function Home() {
 
   return (
     <div className="container mt-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Dinery</h2>
-        {currentUser ? (
-          <div>
-            <span className="me-3">{currentUser.email}</span>
-            <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}>
-              Log Out
-            </button>
-          </div>
-        ) : (
-          <div className="d-flex gap-2">
-            <button className="btn btn-primary btn-sm" onClick={() => navigate("/login")}>Login</button>
-            <button className="btn btn-secondary btn-sm" onClick={() => navigate("/signup")}>Sign Up</button>
-          </div>
-        )}
-      </div>
+
 
       {loading && <p>Loading restaurants...</p>}
       {error && <p className="text-danger">{error}</p>}
