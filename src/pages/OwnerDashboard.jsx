@@ -60,7 +60,7 @@ export default function OwnerDashboard() {
 
   return (
     <div className="container mt-5">
-      <h2>Manage Your Restaurant</h2>
+    <h2 className="brand-font mb-4">Manage Your Restaurant</h2>
 
       <div className="card p-3 mb-4">
         <h5>Restaurant Details</h5>
@@ -94,7 +94,7 @@ export default function OwnerDashboard() {
 
       <h5>Menu Items</h5>
       {menuItems.map((item) => (
-        <div key={item.id} className="card p-3 mb-2 d-flex flex-row justify-content-between align-items-center">
+        <div key={item.id} className="card p-3 mb-2 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
           <div>
             <strong>{item.name}</strong> — RM {parseFloat(item.price).toFixed(2)}
             <p className="text-muted mb-0 small">{item.category}</p>

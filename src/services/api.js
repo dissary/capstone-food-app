@@ -75,3 +75,10 @@ export function updateUserRole(id, role, currentUser) {
 export function getCurrentUserProfile(currentUser) {
   return authFetch("/users/me", {}, currentUser);
 }
+
+export function getOrder(id, currentUser) {
+  return authFetch(`/orders/${id}`, {}, currentUser);
+}
+export function getMyOrders(currentUser) {
+  return authFetch("/orders/mine", {}, currentUser);
+}

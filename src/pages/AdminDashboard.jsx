@@ -42,7 +42,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="container mt-5">
-      <h2>Admin Dashboard</h2>
+      <h2 className="brand-font mb-4">Admin Dashboard</h2>
 
       <h5 className="mt-4">Add Restaurant</h5>
       <div className="card p-3 mb-4">

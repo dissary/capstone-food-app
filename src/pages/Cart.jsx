@@ -64,39 +64,43 @@ export default function Cart() {
     finalizeOrder(paymentIntentId); // order created only after payment confirmed
   }
 
-  if (cart.length === 0) {
+    if (cart.length === 0) {
     return (
-      <div className="container mt-5">
-        <h2>Your cart is empty</h2>
-        <button className="btn btn-primary mt-3" onClick={() => navigate("/")}>
-          Browse Restaurants
-        </button>
-      </div>
+        <div className="container">
+        <div className="empty-state">
+            <h5>Your cart is empty</h5>
+            <p>Add something delicious to get started.</p>
+            <button className="btn btn-primary mt-2" onClick={() => navigate("/")}>Browse Restaurants</button>
+        </div>
+        </div>
     );
-  }
+    }
 
   return (
     <div className="container mt-5">
       <button className="btn btn-link mb-3" onClick={() => navigate(-1)}>&larr; Back to Menu</button>
       <h2>Your Order</h2>
 
-      {cart.map((item) => (
-        <div key={item.menu_item_id} className="d-flex justify-content-between align-items-center border-bottom py-2">
-          <div>
+        {cart.map((item) => (
+        <div key={item.menu_item_id} className="d-flex justify-content-between align-items-center py-3" style={{ borderBottom: "1px solid var(--dinery-sage)" }}>
+            <div>
             <strong>{item.name}</strong>
-            <p className="text-muted mb-0">RM {item.price.toFixed(2)} each</p>
-          </div>
-          <div className="d-flex align-items-center gap-2">
-            <button className="btn btn-sm btn-outline-secondary" onClick={() => updateQuantity(item.menu_item_id, item.quantity - 1)}>-</button>
-            <span>{item.quantity}</span>
-            <button className="btn btn-sm btn-outline-secondary" onClick={() => updateQuantity(item.menu_item_id, item.quantity + 1)}>+</button>
-            <button className="btn btn-sm btn-outline-danger ms-2" onClick={() => removeFromCart(item.menu_item_id)}>✕</button>
-          </div>
+            <p className="text-muted mb-0 small">RM {item.price.toFixed(2)} each</p>
+            </div>
+            <div className="d-flex align-items-center gap-2">
+            <button className="btn btn-sm btn-outline-secondary" style={{ borderRadius: "8px" }} onClick={() => updateQuantity(item.menu_item_id, item.quantity - 1)}>−</button>
+            <span className="fw-bold" style={{ minWidth: "20px", textAlign: "center" }}>{item.quantity}</span>
+            <button className="btn btn-sm btn-outline-secondary" style={{ borderRadius: "8px" }} onClick={() => updateQuantity(item.menu_item_id, item.quantity + 1)}>+</button>
+            <button className="btn btn-sm text-danger ms-2" style={{ border: "none" }} onClick={() => removeFromCart(item.menu_item_id)}>✕</button>
+            </div>
         </div>
-      ))}
+        ))}
 
-      <h4 className="text-end mt-3">Total: RM {total.toFixed(2)}</h4>
-
+        <div className="d-flex justify-content-between align-items-center mt-3 p-3" style={{ background: "var(--dinery-sage)", borderRadius: "var(--radius-md)" }}>
+        <span className="fw-bold">Total</span>
+        <h4 className="mb-0 brand-font" style={{ color: "var(--dinery-forest)" }}>RM {total.toFixed(2)}</h4>
+        </div>
+        
       {!currentUser && (
         <div className="mt-4">
           <h5>Your Details (Guest)</h5>

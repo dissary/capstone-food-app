@@ -8,6 +8,8 @@ import Cart from "./pages/Cart";
 import OwnerDashboard from "./pages/OwnerDashboard";
 import RestaurantDetail from "./pages/RestaurantDetail";
 import AdminDashboard from "./pages/AdminDashboard";
+import OrderConfirmation from "./pages/OrderConfirmation";
+import OrderHistory from "./pages/OrderHistory";
 import Navbar from "./components/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -26,7 +28,8 @@ export default function App() {
           <Route path="/order-confirmation/:id" element={<div className="container mt-5"><h2>Order placed! (confirmation page coming soon)</h2></div>} />
           <Route path="/owner" element={<OwnerDashboard />} />
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/orders" element={<div className="container mt-5"><h2>My Orders (coming soon)</h2></div>} />
+          <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
+          <Route path="/orders" element={<OrderHistory />} />
         </Routes>
       </BrowserRouter>
       </CartProvider>

@@ -43,7 +43,7 @@ export default function RestaurantDetail() {
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-4 pb-5" style={{ paddingBottom: cartCount > 0 ? "90px" : "" }}>
       <button className="btn btn-link mb-3" onClick={() => navigate("/")}>&larr; Back</button>
 
       <div className="d-flex justify-content-between align-items-start mb-4">
@@ -53,9 +53,12 @@ export default function RestaurantDetail() {
           <p className="text-muted"><small>{restaurant.address}</small></p>
         </div>
         {cartCount > 0 && (
-          <button className="btn btn-success" onClick={() => navigate("/cart")}>
-            Cart ({cartCount})
-          </button>
+          <div className="sticky-cart-bar">
+            <span>{cartCount} item{cartCount > 1 ? "s" : ""} in cart</span>
+            <button className="btn" onClick={() => navigate("/cart")}>
+              View Cart →
+            </button>
+          </div>
         )}
       </div>
 
@@ -63,7 +66,7 @@ export default function RestaurantDetail() {
 
       {Object.entries(grouped).map(([category, items]) => (
         <div key={category} className="mb-4">
-          <h4>{category}</h4>
+        <span className="category-pill">{category}</span>
           <div className="row">
             {items.map((item) => (
               <div className="col-md-6 mb-3" key={item.id}>
