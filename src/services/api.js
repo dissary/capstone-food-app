@@ -48,3 +48,19 @@ export function createPaymentIntent(amount, currentUser) {
     body: JSON.stringify({ amount }),
   }, currentUser);
 }
+
+export function getMyRestaurant(currentUser) {
+  return authFetch("/restaurants/mine", {}, currentUser);
+}
+export function updateRestaurant(id, data, currentUser) {
+  return authFetch(`/restaurants/${id}`, { method: "PUT", body: JSON.stringify(data) }, currentUser);
+}
+export function createMenuItem(data, currentUser) {
+  return authFetch("/menu-items", { method: "POST", body: JSON.stringify(data) }, currentUser);
+}
+export function updateMenuItem(id, data, currentUser) {
+  return authFetch(`/menu-items/${id}`, { method: "PUT", body: JSON.stringify(data) }, currentUser);
+}
+export function deleteMenuItem(id, currentUser) {
+  return authFetch(`/menu-items/${id}`, { method: "DELETE" }, currentUser);
+}

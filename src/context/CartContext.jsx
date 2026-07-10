@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const CartContext = createContext();
 
@@ -7,8 +7,26 @@ export function useCart() {
 }
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([]); // [{ menu_item_id, name, price, quantity }]
-  const [restaurantId, setRestaurantId] = useState(null);
+  const [cart, setCart] = useState(() => {
+    const saved = localStorage.getItem("dinery_cart");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [restaurantId, setRestaurantId] = useState(() => {
+    return localStorage.getItem("dinery_restaurant_id") || null;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("dinery_cart", JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
+    if (restaurantId) {
+      localStorage.setItem("dinery_restaurant_id", restaurantId);
+    } else {
+      localStorage.removeItem("dinery_restaurant_id");
+    }
+  }, [restaurantId]);
+
 
   function addToCart(item, fromRestaurantId) {
     // Prevent mixing items from different restaurants

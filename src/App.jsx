@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
+import OwnerDashboard from "./pages/OwnerDashboard";
 import RestaurantDetail from "./pages/RestaurantDetail";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/restaurants/:id" element={<RestaurantDetail />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/order-confirmation/:id" element={<div className="container mt-5"><h2>Order placed! (confirmation page coming soon)</h2></div>} />
+          <Route path="/owner" element={<OwnerDashboard />} />
         </Routes>
       </BrowserRouter>
       </CartProvider>
