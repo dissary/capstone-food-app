@@ -64,3 +64,10 @@ export function updateMenuItem(id, data, currentUser) {
 export function deleteMenuItem(id, currentUser) {
   return authFetch(`/menu-items/${id}`, { method: "DELETE" }, currentUser);
 }
+
+export function getAllUsers(currentUser) {
+  return authFetch("/users", {}, currentUser);
+}
+export function updateUserRole(id, role, currentUser) {
+  return authFetch(`/users/${id}/role`, { method: "PUT", body: JSON.stringify({ role }) }, currentUser);
+}
