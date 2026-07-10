@@ -27,6 +27,12 @@ export function CartProvider({ children }) {
     }
   }, [restaurantId]);
 
+  useEffect(() => {
+  if (cart.length === 0 && restaurantId) {
+    setRestaurantId(null);
+  }
+}, [cart]);
+
 
   function addToCart(item, fromRestaurantId) {
     // Prevent mixing items from different restaurants

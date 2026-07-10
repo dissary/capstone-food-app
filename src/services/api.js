@@ -82,3 +82,7 @@ export function getOrder(id, currentUser) {
 export function getMyOrders(currentUser) {
   return authFetch("/orders/mine", {}, currentUser);
 }
+
+export function getAllMenuItemsForOwner(restaurantId, currentUser) {
+  return authFetch(`/menu-items/restaurant/${restaurantId}/all`, {}, currentUser);
+}
