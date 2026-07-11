@@ -72,12 +72,19 @@ export default function RestaurantDetail() {
               <div className="col-md-6 mb-3" key={item.id}>
                 <div className="card">
                   <div className="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                      <h6 className="card-title mb-1">{item.name}</h6>
-                      <p className="card-text text-muted mb-1" style={{ fontSize: "0.9rem" }}>
-                        {item.description}
-                      </p>
-                      <strong>RM {parseFloat(item.price).toFixed(2)}</strong>
+                    <div className="d-flex align-items-center gap-3">
+                      <img
+                        src={item.image_url || "https://placehold.co/80x80/E8F0EC/1B4B43?text=🍽"}
+                        alt={item.name}
+                        style={{ width: "70px", height: "70px", objectFit: "cover", borderRadius: "var(--radius-sm)" }}
+                      />
+                      <div>
+                        <h6 className="card-title mb-1">{item.name}</h6>
+                        <p className="card-text text-muted mb-1" style={{ fontSize: "0.9rem" }}>
+                          {item.description}
+                        </p>
+                        <strong>RM {parseFloat(item.price).toFixed(2)}</strong>
+                      </div>
                     </div>
                     <button
                       className="btn btn-outline-primary btn-sm"

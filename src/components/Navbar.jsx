@@ -40,6 +40,7 @@ export default function Navbar() {
 
         <div className="d-flex align-items-center gap-3 ms-auto">
           {role === "owner" && <Link to="/owner" className="nav-link">My Restaurant</Link>}
+          {role === "owner" && <Link to="/owner/orders" className="nav-link">Orders</Link>}
           {role === "admin" && <Link to="/admin" className="nav-link">Admin</Link>}
 
           {currentUser && (

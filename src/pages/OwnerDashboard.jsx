@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import ImageUpload from "../components/ImageUpload";
+import MenuItemRow from "../components/MenuItemRow";
 import {
   getMyRestaurant, updateRestaurant, getAllMenuItemsForOwner,
   createMenuItem, updateMenuItem, deleteMenuItem
@@ -67,9 +68,18 @@ export default function OwnerDashboard() {
   }
 
   async function handleDeleteMenuItem(id) {
-    await deleteMenuItem(id, currentUser);
-    setMenuItems(menuItems.filter((i) => i.id !== id));
+    try {
+      await deleteMenuItem(id, currentUser);
+      setMenuItems(menuItems.filter((i) => i.id !== id));
+    } catch (err) {
+      alert("This item has order history and can't be permanently deleted — mark it unavailable instead to remove it from the menu.");
+    }
   }
+
+  async function handleUpdateMenuItem(id, updates) {
+  const updated = await updateMenuItem(id, updates, currentUser);
+  setMenuItems(menuItems.map((i) => (i.id === id ? updated : i)));
+}
 
   async function handleToggleAvailability(item) {
     const updated = await updateMenuItem(item.id, { ...item, is_available: !item.is_available }, currentUser);
@@ -130,23 +140,13 @@ export default function OwnerDashboard() {
 
           <h5>Menu Items</h5>
           {menuItems.map((item) => (
-            <div key={item.id} className="card p-3 mb-2 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
-              <div>
-                <strong>{item.name}</strong> — RM {parseFloat(item.price).toFixed(2)}
-                <p className="text-muted mb-0 small">{item.category}</p>
-              </div>
-              <div className="d-flex gap-2 align-items-center">
-                <button
-                  className={`btn btn-sm ${item.is_available ? "btn-outline-success" : "btn-outline-secondary"}`}
-                  onClick={() => handleToggleAvailability(item)}
-                >
-                  {item.is_available ? "Available" : "Unavailable"}
-                </button>
-                <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteMenuItem(item.id)}>
-                  Delete
-                </button>
-              </div>
-            </div>
+            <MenuItemRow
+              key={item.id}
+              item={item}
+              onToggle={() => handleToggleAvailability(item)}
+              onDelete={() => handleDeleteMenuItem(item.id)}
+              onUpdate={(updates) => handleUpdateMenuItem(item.id, updates)}
+            />
           ))}
 
           <div className="card p-3 mt-4">

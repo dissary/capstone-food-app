@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import ImageUpload from "../components/ImageUpload";
-import { getAllUsers, updateUserRole, createRestaurant, getRestaurants } from "../services/api";
+import { getAllUsers, updateUserRole, createRestaurant, getRestaurants, updateRestaurant, deleteRestaurant, getAllRestaurantsForAdmin } from "../services/api";
 
 export default function AdminDashboard() {
   const { currentUser } = useAuth();
@@ -15,7 +15,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     async function load() {
-      const [u, r] = await Promise.all([getAllUsers(currentUser), getRestaurants()]);
+      const [u, r] = await Promise.all([getAllUsers(currentUser), getAllRestaurantsForAdmin(currentUser)]);
       setUsers(u);
       setRestaurants(r);
       setLoading(false);
@@ -62,9 +62,7 @@ export default function AdminDashboard() {
 
       <h5>Existing Restaurants</h5>
       {restaurants.map((r) => (
-        <div key={r.id} className="card p-2 mb-2">
-          <strong>{r.name}</strong> <span className="text-muted small">— {r.address}</span>
-        </div>
+        <AdminRestaurantRow key={r.id} restaurant={r} currentUser={currentUser} onUpdate={(updated) => setRestaurants(restaurants.map((x) => x.id === updated.id ? updated : x))} onDelete={() => setRestaurants(restaurants.filter((x) => x.id !== r.id))} />
       ))}
 
       <h5 className="mt-4">Manage User Roles</h5>
@@ -82,6 +80,37 @@ export default function AdminDashboard() {
           </select>
         </div>
       ))}
+    </div>
+  );
+}
+
+function AdminRestaurantRow({ restaurant, currentUser, onUpdate, onDelete }) {
+  async function togglePause() {
+    const updated = await updateRestaurant(restaurant.id, { ...restaurant, is_active: !restaurant.is_active }, currentUser);
+    onUpdate(updated);
+  }
+  async function handleDelete() {
+    if (!window.confirm(`Delete "${restaurant.name}"? This can't be undone.`)) return;
+    try {
+      await deleteRestaurant(restaurant.id, currentUser);
+      onDelete();
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  return (
+    <div className="card p-2 mb-2 d-flex flex-row justify-content-between align-items-center">
+      <div>
+        <strong>{restaurant.name}</strong> <span className="text-muted small">— {restaurant.address}</span>
+        {!restaurant.is_active && <span className="badge bg-secondary ms-2">Paused</span>}
+      </div>
+      <div className="d-flex gap-2">
+        <button className="btn btn-sm btn-outline-secondary" onClick={togglePause}>
+          {restaurant.is_active ? "Pause" : "Resume"}
+        </button>
+        <button className="btn btn-sm btn-outline-danger" onClick={handleDelete}>Delete</button>
+      </div>
     </div>
   );
 }

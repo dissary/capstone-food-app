@@ -55,6 +55,9 @@ export function getMyRestaurant(currentUser) {
 export function updateRestaurant(id, data, currentUser) {
   return authFetch(`/restaurants/${id}`, { method: "PUT", body: JSON.stringify(data) }, currentUser);
 }
+export function deleteRestaurant(id, currentUser) {
+  return authFetch(`/restaurants/${id}`, { method: "DELETE" }, currentUser);
+}
 export function createMenuItem(data, currentUser) {
   return authFetch("/menu-items", { method: "POST", body: JSON.stringify(data) }, currentUser);
 }
@@ -85,4 +88,16 @@ export function getMyOrders(currentUser) {
 
 export function getAllMenuItemsForOwner(restaurantId, currentUser) {
   return authFetch(`/menu-items/restaurant/${restaurantId}/all`, {}, currentUser);
+}
+
+export function getRestaurantOrders(restaurantId, currentUser) {
+  return authFetch(`/orders/restaurant/${restaurantId}`, {}, currentUser);
+}
+
+export function updateOrderStatus(orderId, status, currentUser) {
+  return authFetch(`/orders/${orderId}/status`, { method: "PUT", body: JSON.stringify({ status }) }, currentUser);
+}
+
+export function getAllRestaurantsForAdmin(currentUser) {
+  return authFetch("/restaurants/all", {}, currentUser);
 }
