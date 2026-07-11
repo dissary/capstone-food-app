@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getRestaurant, getMenuItems } from "../services/api";
 import { useCart } from "../context/CartContext";
+import { getCategoryOrder } from "../services/api";
 
 export default function RestaurantDetail() {
   const { id } = useParams();
@@ -11,15 +12,19 @@ export default function RestaurantDetail() {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [categoryOrder, setCategoryOrder] = useState([]);
+
   useEffect(() => {
     async function fetchData() {
       try {
-        const [restaurantData, menuData] = await Promise.all([
+        const [restaurantData, menuData, orderData] = await Promise.all([
           getRestaurant(id),
           getMenuItems(id),
+          getCategoryOrder(id),
         ]);
         setRestaurant(restaurantData);
         setMenuItems(menuData);
+        setCategoryOrder(orderData);
       } catch (err) {
         console.error(err);
       } finally {
@@ -32,7 +37,7 @@ export default function RestaurantDetail() {
   if (loading) return <div className="container mt-5">Loading...</div>;
   if (!restaurant) return <div className="container mt-5">Restaurant not found.</div>;
 
-  // Group menu items by category
+// Group menu items by category
   const grouped = menuItems.reduce((acc, item) => {
     const cat = item.category || "Other";
     if (!acc[cat]) acc[cat] = [];
@@ -40,12 +45,42 @@ export default function RestaurantDetail() {
     return acc;
   }, {});
 
+  // Sort categories using the owner's saved order
+  const orderMap = {};
+  categoryOrder.forEach((row) => { orderMap[row.category] = row.sort_order; });
+
+  const sortedEntries = Object.entries(grouped).sort(([a], [b]) => {
+    const aOrder = orderMap[a] ?? 9999;
+    const bOrder = orderMap[b] ?? 9999;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return a.localeCompare(b);
+  });
+
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
     <div className="container mt-4 pb-5" style={{ paddingBottom: cartCount > 0 ? "90px" : "" }}>
-      <button className="btn btn-link mb-3" onClick={() => navigate("/")}>&larr; Back</button>
-
+    <button
+      onClick={() => navigate("/")}
+      className="d-inline-flex align-items-center gap-2 mb-3"
+      style={{
+        background: "none",
+        border: "none",
+        color: "var(--dinery-forest)",
+        fontWeight: 600,
+        fontSize: "0.95rem",
+        padding: "8px 4px",
+        cursor: "pointer",
+        transition: "opacity 0.15s ease",
+      }}
+      onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+      onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+      Back to Restaurants
+    </button>
       <div className="d-flex justify-content-between align-items-start mb-4">
         <div>
           <h2>{restaurant.name}</h2>
@@ -64,7 +99,7 @@ export default function RestaurantDetail() {
 
       {Object.keys(grouped).length === 0 && <p>No menu items available yet.</p>}
 
-      {Object.entries(grouped).map(([category, items]) => (
+      {sortedEntries.map(([category, items]) => (
         <div key={category} className="mb-4">
         <span className="category-pill">{category}</span>
           <div className="row">

@@ -19,8 +19,11 @@ export default function OrderConfirmation() {
   return (
     <div className="container mt-5">
       <div className="card p-4">
-        <h2>✅ Order Placed!</h2>
-        <p className="text-muted">Order #{order.id} — Status: <strong>{order.status}</strong></p>
+      <h2>✅ Order Placed!</h2>
+      <p className="text-muted mb-1">
+        From <strong>{order.restaurant_name}</strong>
+      </p>
+      <p className="text-muted">Order #{order.id} — Status: <strong>{order.status}</strong></p>
 
         <hr />
         {order.items.map((item) => (

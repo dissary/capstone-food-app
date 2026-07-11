@@ -101,3 +101,13 @@ export function updateOrderStatus(orderId, status, currentUser) {
 export function getAllRestaurantsForAdmin(currentUser) {
   return authFetch("/restaurants/all", {}, currentUser);
 }
+
+export function getCategoryOrder(restaurantId) {
+  return authFetch(`/restaurants/${restaurantId}/category-order`);
+}
+export function updateCategoryOrder(restaurantId, categories, currentUser) {
+  return authFetch(`/restaurants/${restaurantId}/category-order`, {
+    method: "PUT",
+    body: JSON.stringify({ categories }),
+  }, currentUser);
+}

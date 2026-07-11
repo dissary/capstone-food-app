@@ -25,9 +25,10 @@ export default function OrderHistory() {
         <Link to={`/order-confirmation/${order.id}`} key={order.id} className="text-decoration-none text-dark">
           <div className="card p-3 mb-2">
             <div className="d-flex justify-content-between">
-              <span>Order #{order.id}</span>
+              <span className="fw-bold">{order.restaurant_name}</span>
               <span className="badge bg-secondary">{order.status}</span>
             </div>
+            <div className="text-muted small">Order #{order.id}</div>
             <div className="text-muted small">RM {parseFloat(order.total_amount).toFixed(2)} — {new Date(order.created_at).toLocaleDateString()}</div>
           </div>
         </Link>
