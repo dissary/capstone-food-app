@@ -15,9 +15,18 @@
 }
 
 body {
-  background-color: var(--dinery-cream);
   color: var(--dinery-charcoal);
   font-family: 'Inter', sans-serif;
+  background-color: var(--dinery-cream);
+  background-image:
+    radial-gradient(circle at 10% 10%, rgba(27, 75, 67, 0.10) 0%, transparent 35%),
+    radial-gradient(circle at 90% 15%, rgba(255, 166, 48, 0.14) 0%, transparent 32%),
+    radial-gradient(circle at 88% 85%, rgba(27, 75, 67, 0.10) 0%, transparent 35%),
+    radial-gradient(circle at 8% 90%, rgba(255, 166, 48, 0.10) 0%, transparent 32%),
+    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='420'%20height='420'%20viewBox='0%200%20420%20420'%3E%3Ctext%20x='30'%20y='70'%20font-size='34'%20opacity='0.14'%20transform='rotate(-12%2030%2070)'%3E%F0%9F%8D%B4%3C/text%3E%3Ctext%20x='190'%20y='40'%20font-size='30'%20opacity='0.12'%20transform='rotate(8%20190%2040)'%3E%E2%98%95%3C/text%3E%3Ctext%20x='330'%20y='90'%20font-size='36'%20opacity='0.13'%20transform='rotate(15%20330%2090)'%3E%F0%9F%8D%95%3C/text%3E%3Ctext%20x='70'%20y='190'%20font-size='30'%20opacity='0.12'%20transform='rotate(-8%2070%20190)'%3E%F0%9F%8D%83%3C/text%3E%3Ctext%20x='230'%20y='210'%20font-size='32'%20opacity='0.12'%20transform='rotate(10%20230%20210)'%3E%F0%9F%A5%97%3C/text%3E%3Ctext%20x='370'%20y='230'%20font-size='30'%20opacity='0.13'%20transform='rotate(-14%20370%20230)'%3E%F0%9F%8D%B4%3C/text%3E%3Ctext%20x='120'%20y='320'%20font-size='34'%20opacity='0.13'%20transform='rotate(12%20120%20320)'%3E%F0%9F%8D%9C%3C/text%3E%3Ctext%20x='280'%20y='340'%20font-size='30'%20opacity='0.12'%20transform='rotate(-10%20280%20340)'%3E%E2%98%95%3C/text%3E%3Ctext%20x='30'%20y='400'%20font-size='30'%20opacity='0.12'%20transform='rotate(9%2030%20400)'%3E%F0%9F%8D%83%3C/text%3E%3C/svg%3E");
+  background-attachment: fixed;
+  background-size: cover, cover, cover, cover, 420px 420px;
+  min-height: 100vh;
 }
 
 h1, h2, h3, .brand-font {
