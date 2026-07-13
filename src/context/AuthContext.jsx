@@ -2,6 +2,8 @@ import { createContext, useContext, useState, useEffect } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
@@ -12,6 +14,8 @@ const AuthContext = createContext();
 export function useAuth() {
   return useContext(AuthContext);
 }
+
+const googleProvider = new GoogleAuthProvider();
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
@@ -25,26 +29,30 @@ export function AuthProvider({ children }) {
     return signInWithEmailAndPassword(auth, email, password);
   }
 
+  function loginWithGoogle() {
+    return signInWithPopup(auth, googleProvider);
+  }
+
   function logout() {
     return signOut(auth);
   }
 
-useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, async (user) => {
-    setCurrentUser(user);
-    if (user) {
-      const token = await user.getIdToken();
-      await fetch("http://localhost:3000/api/users/sync", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-    }
-    setLoading(false);
-  });
-  return unsubscribe;
-}, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setCurrentUser(user);
+      if (user) {
+        const token = await user.getIdToken();
+        await fetch("http://localhost:3000/api/users/sync", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }
+      setLoading(false);
+    });
+    return unsubscribe;
+  }, []);
 
-  const value = { currentUser, signup, login, logout };
+  const value = { currentUser, signup, login, loginWithGoogle, logout };
 
   return (
     <AuthContext.Provider value={value}>

@@ -35,8 +35,13 @@ describe('Login page', () => {
     expect(emailInput.value).toBe('test@example.com');
   });
 
-  it('renders a submit button', () => {
-    renderLogin();
-    expect(screen.getByRole('button')).toBeInTheDocument();
-  });
+it('renders a submit button', () => {
+  renderLogin();
+  expect(screen.getByRole('button', { name: /log in/i })).toBeInTheDocument();
+});
+
+it('renders a Google sign-in button', () => {
+  renderLogin();
+  expect(screen.getByRole('button', { name: /continue with google/i })).toBeInTheDocument();
+});
 });

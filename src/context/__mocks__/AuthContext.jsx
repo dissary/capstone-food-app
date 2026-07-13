@@ -11,6 +11,7 @@ export function AuthProvider({ children }) {
     currentUser: null,
     signup: async () => {},
     login: async () => {},
+    loginWithGoogle: async () => {},
     logout: async () => {},
   };
   return <AuthContext.Provider value={mockValue}>{children}</AuthContext.Provider>;

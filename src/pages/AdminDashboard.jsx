@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../context/AuthContext";
 import ImageUpload from "../components/ImageUpload";
 import { getAllUsers, updateUserRole, createRestaurant, getRestaurants, updateRestaurant, deleteRestaurant, getAllRestaurantsForAdmin } from "../services/api";
@@ -66,13 +66,84 @@ export default function AdminDashboard() {
       ))}
 
       <h5 className="mt-4">Manage User Roles</h5>
-      {users.map((u) => (
+          <UserRoleManager users={users} onRoleChange={handleRoleChange} />
+    </div>
+  );
+}
+
+const PAGE_SIZE = 10;
+
+function UserRoleManager({ users, onRoleChange }) {
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [page, setPage] = useState(1);
+
+  const filtered = useMemo(() => {
+    return users.filter((u) => {
+      const matchesSearch = u.email.toLowerCase().includes(search.toLowerCase()) ||
+        (u.name || "").toLowerCase().includes(search.toLowerCase());
+      const matchesRole = roleFilter === "all" || u.role === roleFilter;
+      return matchesSearch && matchesRole;
+    });
+  }, [users, search, roleFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  // Reset to page 1 whenever the filter/search actually narrows the result set
+  function updateSearch(value) {
+    setSearch(value);
+    setPage(1);
+  }
+  function updateRoleFilter(value) {
+    setRoleFilter(value);
+    setPage(1);
+  }
+
+  const roleCounts = useMemo(() => {
+    return {
+      all: users.length,
+      consumer: users.filter((u) => u.role === "consumer").length,
+      owner: users.filter((u) => u.role === "owner").length,
+      admin: users.filter((u) => u.role === "admin").length,
+    };
+  }, [users]);
+
+  return (
+    <div>
+      <div className="d-flex flex-column flex-sm-row gap-2 mb-3">
+        <input
+          className="form-control"
+          placeholder="Search by name or email..."
+          value={search}
+          onChange={(e) => updateSearch(e.target.value)}
+        />
+        <select
+          className="form-select w-auto"
+          value={roleFilter}
+          onChange={(e) => updateRoleFilter(e.target.value)}
+        >
+          <option value="all">All ({roleCounts.all})</option>
+          <option value="consumer">Consumer ({roleCounts.consumer})</option>
+          <option value="owner">Owner ({roleCounts.owner})</option>
+          <option value="admin">Admin ({roleCounts.admin})</option>
+        </select>
+      </div>
+
+      {filtered.length === 0 && (
+        <p className="text-muted">No users match your search.</p>
+      )}
+
+      {paginated.map((u) => (
         <div key={u.id} className="d-flex justify-content-between align-items-center border-bottom py-2">
-          <span>{u.email}</span>
+          <div>
+            <div>{u.email}</div>
+            {u.name && <div className="text-muted small">{u.name}</div>}
+          </div>
           <select
             className="form-select w-auto"
             value={u.role}
-            onChange={(e) => handleRoleChange(u.id, e.target.value)}
+            onChange={(e) => onRoleChange(u.id, e.target.value)}
           >
             <option value="consumer">Consumer</option>
             <option value="owner">Owner</option>
@@ -80,6 +151,30 @@ export default function AdminDashboard() {
           </select>
         </div>
       ))}
+
+      {totalPages > 1 && (
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <span className="text-muted small">
+            Page {page} of {totalPages} ({filtered.length} users)
+          </span>
+          <div className="d-flex gap-2">
+            <button
+              className="btn btn-sm btn-outline-secondary"
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+            >
+              Previous
+            </button>
+            <button
+              className="btn btn-sm btn-outline-secondary"
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

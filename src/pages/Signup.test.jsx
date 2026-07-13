@@ -27,8 +27,13 @@ describe('Signup page', () => {
     expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument();
   });
 
-  it('renders a submit button', () => {
-    renderSignup();
-    expect(screen.getByRole('button')).toBeInTheDocument();
-  });
+it('renders a submit button', () => {
+  renderSignup();
+  expect(screen.getByRole('button', { name: /sign up/i })).toBeInTheDocument();
+});
+
+it('renders a Google sign-in button', () => {
+  renderSignup();
+  expect(screen.getByRole('button', { name: /continue with google/i })).toBeInTheDocument();
+});
 });
