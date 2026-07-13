@@ -42,7 +42,8 @@ export function AuthProvider({ children }) {
       setCurrentUser(user);
       if (user) {
         const token = await user.getIdToken();
-        await fetch("http://localhost:3000/api/users/sync", {
+        const apiBase = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+        await fetch(`${apiBase}/users/sync`, {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
         });
