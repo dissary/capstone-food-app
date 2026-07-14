@@ -139,3 +139,40 @@ h1, h2, h3, .brand-font {
   }
   .card-img-top { height: 140px !important; }
 }
+
+.dinery-category-toggle {
+  background-color: #F0F0EE !important;
+  color: var(--dinery-charcoal) !important;
+  border: none !important;
+  font-weight: 600;
+  text-align: left;
+  width: 100%;
+  border-radius: 14px !important;
+  padding: 12px 16px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dinery-category-toggle:hover,
+.dinery-category-toggle:focus,
+.dinery-category-toggle:active {
+  background-color: #F0F0EE !important;
+  color: var(--dinery-charcoal) !important;
+  box-shadow: none !important;
+}
+.dinery-category-toggle::after {
+  margin-left: auto;
+}
+
+.dinery-search-btn {
+  background-color: #F0F0EE !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dinery-charcoal) !important;
+  flex-shrink: 0;
+}

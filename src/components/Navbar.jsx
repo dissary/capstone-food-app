@@ -7,7 +7,7 @@ import { getCurrentUserProfile } from "../services/api";
 
 export default function Navbar() {
   const { currentUser, logout } = useAuth();
-  const { cart } = useCart();
+  const { cart, clearCart } = useCart();
   const navigate = useNavigate();
   const [role, setRole] = useState(null);
   const [expanded, setExpanded] = useState(false);
@@ -28,8 +28,11 @@ export default function Navbar() {
     fetchRole();
   }, [currentUser]);
 
+  
+
   async function handleLogout() {
     await logout();
+    clearCart();
     setExpanded(false);
     navigate("/");
   }
@@ -65,9 +68,10 @@ export default function Navbar() {
             <Button
               size="sm"
               onClick={() => handleNavigate("/cart")}
+              className="ms-2"
               style={{ backgroundColor: "var(--dinery-mango)", border: "none", color: "white", fontWeight: 700 }}
             >
-              Cart ({cartCount})
+              <i className="bi bi-cart"></i> Cart ({cartCount})
             </Button>
           )}
           <BsNavbar.Toggle aria-controls="main-navbar" />
@@ -75,7 +79,7 @@ export default function Navbar() {
 
         <BsNavbar.Collapse id="main-navbar">
           <Nav className="me-auto mt-3 mt-lg-0">
-            {role === "owner" && (
+            {(role === "owner" || role === "admin") && (
               <>
                 <Nav.Link onClick={() => handleNavigate("/owner")}>My Restaurant</Nav.Link>
                 <Nav.Link onClick={() => handleNavigate("/owner/orders")}>Orders</Nav.Link>

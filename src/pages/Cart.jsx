@@ -78,7 +78,17 @@ export default function Cart() {
 
   return (
     <div className="container mt-5">
-      <button className="btn btn-link mb-3" onClick={() => navigate(-1)}>&larr; Back to Menu</button>
+      <button
+        onClick={() => navigate(-1)}
+        className="d-inline-flex align-items-center gap-2 mb-3"
+        style={{ background: "none", border: "none", color: "var(--dinery-forest)", fontWeight: 600, fontSize: "0.95rem", padding: "8px 4px", cursor: "pointer" }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        Back to Menu
+      </button>
+      
       <h2>Your Order</h2>
 
         {cart.map((item) => (
