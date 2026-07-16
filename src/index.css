@@ -176,3 +176,8 @@ h1, h2, h3, .brand-font {
   color: var(--dinery-charcoal) !important;
   flex-shrink: 0;
 }
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

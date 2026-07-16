@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../context/AuthContext";
 import ImageUpload from "../components/ImageUpload";
+import Toast from "../components/Toast";
 import { getAllUsers, updateUserRole, createRestaurant, getRestaurants, updateRestaurant, deleteRestaurant, getAllRestaurantsForAdmin } from "../services/api";
 
 export default function AdminDashboard() {
@@ -30,10 +31,23 @@ export default function AdminDashboard() {
 
   async function handleCreateRestaurant() {
     if (!newRestaurant.name) return;
-    const payload = { ...newRestaurant, owner_id: newRestaurant.owner_id || null };
-    const created = await createRestaurant(payload, currentUser);
-    setRestaurants([...restaurants, created]);
-    setNewRestaurant({ name: "", description: "", address: "", phone: "", image_url: "", owner_id: "" });
+    try {
+      const payload = { ...newRestaurant, owner_id: newRestaurant.owner_id || null };
+      const created = await createRestaurant(payload, currentUser);
+      setRestaurants([...restaurants, created]);
+      setNewRestaurant({ name: "", description: "", address: "", phone: "", image_url: "", owner_id: "" });
+      showToast(`"${created.name}" was added successfully!`);
+    } catch (err) {
+      showToast(err.message || "Failed to add restaurant", "error");
+    }
+  }
+
+  // inside the component, add:
+  const [toast, setToast] = useState(null);
+
+  function showToast(message, type = "success") {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 5000); // auto-dismiss after 5s
   }
 
   if (loading) return <div className="container mt-5">Loading...</div>;
@@ -58,6 +72,7 @@ export default function AdminDashboard() {
           ))}
         </select>
         <button className="btn btn-primary" onClick={handleCreateRestaurant}>Add Restaurant</button>
+        {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       </div>
 
       <h5>Existing Restaurants</h5>

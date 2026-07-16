@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import ImageUpload from "../components/ImageUpload";
+import Toast from "../components/Toast";
 import {
   getMyRestaurant, updateRestaurant, getAllMenuItemsForOwner,
   createMenuItem, updateMenuItem, deleteMenuItem,
@@ -28,8 +29,21 @@ export default function OwnerDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [draggedCategory, setDraggedCategory] = useState(null);
-
+  const [restaurantForm, setRestaurantForm] = useState(null);
   const [newItem, setNewItem] = useState({ category: "", name: "", description: "", price: "", image_url: "" });
+
+  const [toast, setToast] = useState(null);
+
+  function showToast(message, type = "success") {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 5000);
+  }
+
+  useEffect(() => {
+    if (restaurant) {
+      setRestaurantForm({ ...restaurant });
+    }
+  }, [restaurant]);
 
   useEffect(() => {
     async function loadList() {
@@ -71,11 +85,15 @@ export default function OwnerDashboard() {
     loadSelected();
   }, [selectedId, myRestaurants]);
 
-  async function handleRestaurantUpdate(field, value) {
-    const updated = { ...restaurant, [field]: value };
-    setRestaurant(updated);
-    await updateRestaurant(restaurant.id, updated, currentUser);
-    setMyRestaurants(myRestaurants.map((r) => (r.id === updated.id ? updated : r)));
+  async function handleSaveRestaurant() {
+    try {
+      const updated = await updateRestaurant(restaurantForm.id, restaurantForm, currentUser);
+      setRestaurant(updated);
+      setMyRestaurants(myRestaurants.map((r) => (r.id === updated.id ? updated : r)));
+      showToast("Restaurant details saved");
+    } catch (err) {
+      showToast(err.message || "Failed to save changes", "error");
+    }
   }
 
   async function handleAddMenuItem() {
@@ -153,13 +171,37 @@ export default function OwnerDashboard() {
 
       {restaurant && (
         <>
+        {restaurantForm && (
           <div className="card p-3 mb-4">
             <h5>Restaurant Details</h5>
-            <input className="form-control mb-2" value={restaurant.name} onChange={(e) => setRestaurant({ ...restaurant, name: e.target.value })} onBlur={(e) => handleRestaurantUpdate("name", e.target.value)} placeholder="Restaurant Name" />
-            <textarea className="form-control mb-2" value={restaurant.description || ""} onChange={(e) => setRestaurant({ ...restaurant, description: e.target.value })} onBlur={(e) => handleRestaurantUpdate("description", e.target.value)} placeholder="Description" />
-            <input className="form-control mb-2" value={restaurant.address || ""} onChange={(e) => setRestaurant({ ...restaurant, address: e.target.value })} onBlur={(e) => handleRestaurantUpdate("address", e.target.value)} placeholder="Address" />
-            <ImageUpload folder="restaurants" currentUrl={restaurant.image_url} onUploadComplete={(url) => handleRestaurantUpdate("image_url", url)} />
+            <input
+              className="form-control mb-2"
+              value={restaurantForm.name}
+              onChange={(e) => setRestaurantForm({ ...restaurantForm, name: e.target.value })}
+              placeholder="Restaurant Name"
+            />
+            <textarea
+              className="form-control mb-2"
+              value={restaurantForm.description || ""}
+              onChange={(e) => setRestaurantForm({ ...restaurantForm, description: e.target.value })}
+              placeholder="Description"
+            />
+            <input
+              className="form-control mb-2"
+              value={restaurantForm.address || ""}
+              onChange={(e) => setRestaurantForm({ ...restaurantForm, address: e.target.value })}
+              placeholder="Address"
+            />
+            <ImageUpload
+              folder="restaurants"
+              currentUrl={restaurantForm.image_url}
+              onUploadComplete={(url) => setRestaurantForm({ ...restaurantForm, image_url: url })}
+            />
+            <button className="btn btn-primary mt-2" onClick={handleSaveRestaurant}>
+              Save Changes
+            </button>
           </div>
+        )}
 
           <div className="d-flex justify-content-between align-items-center mb-2">
             <h5 className="mb-0">Menu Items</h5>
@@ -218,6 +260,7 @@ export default function OwnerDashboard() {
             <input className="form-control mb-2" type="number" step="0.01" placeholder="Price" value={newItem.price} onChange={(e) => setNewItem({ ...newItem, price: e.target.value })} />
             <ImageUpload folder="menu-items" onUploadComplete={(url) => setNewItem({ ...newItem, image_url: url })} />
             <button className="btn btn-primary" onClick={handleAddMenuItem}>Add Item</button>
+            {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
           </div>
         </>
       )}

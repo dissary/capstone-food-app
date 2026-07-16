@@ -91,20 +91,27 @@ export default function Cart() {
       
       <h2>Your Order</h2>
 
-        {cart.map((item) => (
+      {cart.map((item) => (
         <div key={item.menu_item_id} className="d-flex justify-content-between align-items-center py-3" style={{ borderBottom: "1px solid var(--dinery-sage)" }}>
+          <div className="d-flex align-items-center gap-3">
+            <img
+              src={item.image_url || "https://placehold.co/60x60/E8F0EC/1B4B43?text=🍽"}
+              alt={item.name}
+              style={{ width: "60px", height: "60px", objectFit: "cover", borderRadius: "var(--radius-sm)" }}
+            />
             <div>
-            <strong>{item.name}</strong>
-            <p className="text-muted mb-0 small">RM {item.price.toFixed(2)} each</p>
+              <strong>{item.name}</strong>
+              <p className="text-muted mb-0 small">RM {item.price.toFixed(2)} each</p>
             </div>
-            <div className="d-flex align-items-center gap-2">
+          </div>
+          <div className="d-flex align-items-center gap-2">
             <button className="btn btn-sm btn-outline-secondary" style={{ borderRadius: "8px" }} onClick={() => updateQuantity(item.menu_item_id, item.quantity - 1)}>−</button>
             <span className="fw-bold" style={{ minWidth: "20px", textAlign: "center" }}>{item.quantity}</span>
             <button className="btn btn-sm btn-outline-secondary" style={{ borderRadius: "8px" }} onClick={() => updateQuantity(item.menu_item_id, item.quantity + 1)}>+</button>
             <button className="btn btn-sm text-danger ms-2" style={{ border: "none" }} onClick={() => removeFromCart(item.menu_item_id)}>✕</button>
-            </div>
+          </div>
         </div>
-        ))}
+      ))}
 
         <div className="d-flex justify-content-between align-items-center mt-3 p-3" style={{ background: "var(--dinery-sage)", borderRadius: "var(--radius-md)" }}>
         <span className="fw-bold">Total</span>

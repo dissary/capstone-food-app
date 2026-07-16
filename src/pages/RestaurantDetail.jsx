@@ -3,6 +3,7 @@ import { Dropdown } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { getRestaurant, getMenuItems, getCategoryOrder } from "../services/api";
 import { useCart } from "../context/CartContext";
+import Toast from "../components/Toast";
 
 export default function RestaurantDetail() {
   const { id } = useParams();
@@ -19,6 +20,13 @@ export default function RestaurantDetail() {
   const [searchOpen, setSearchOpen] = useState(false);
 
   const [activeCategory, setActiveCategory] = useState(null);
+
+  const [toast, setToast] = useState(null);
+
+  function showToast(message, type = "success") {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000); // shorter duration, since this fires often
+  }
 
 useEffect(() => {
   function trackActiveCategory() {
@@ -203,7 +211,13 @@ useEffect(() => {
                         <strong>RM {parseFloat(item.price).toFixed(2)}</strong>
                       </div>
                     </div>
-                    <button className="btn btn-outline-primary btn-sm" onClick={() => addToCart(item, restaurant.id)}>
+                    <button
+                      className="btn btn-outline-primary btn-sm"
+                      onClick={() => {
+                        addToCart(item, restaurant.id);
+                        showToast(`${item.name} added to cart`);
+                      }}
+                    >
                       Add
                     </button>
                   </div>
@@ -213,6 +227,7 @@ useEffect(() => {
           </div>
         </div>
       ))}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 }

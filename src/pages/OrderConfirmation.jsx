@@ -26,12 +26,19 @@ export default function OrderConfirmation() {
       <p className="text-muted">Order #{order.id} — Status: <strong>{order.status}</strong></p>
 
         <hr />
-        {order.items.map((item) => (
-          <div key={item.id} className="d-flex justify-content-between">
+      {order.items.map((item) => (
+        <div key={item.id} className="d-flex justify-content-between align-items-center py-2">
+          <div className="d-flex align-items-center gap-3">
+            <img
+              src={item.image_url || "https://placehold.co/50x50/E8F0EC/1B4B43?text=🍽"}
+              alt={item.name}
+              style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "var(--radius-sm)" }}
+            />
             <span>{item.quantity} × {item.name}</span>
-            <span>RM {(item.price_at_order * item.quantity).toFixed(2)}</span>
           </div>
-        ))}
+          <span>RM {(item.price_at_order * item.quantity).toFixed(2)}</span>
+        </div>
+      ))}
         <hr />
         <h5 className="text-end">Total: RM {parseFloat(order.total_amount).toFixed(2)}</h5>
         <p className="text-muted">Payment: {order.payment_method === "online" ? "Paid Online" : "Pay at Counter"}</p>

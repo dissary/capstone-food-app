@@ -35,7 +35,6 @@ export function CartProvider({ children }) {
 
 
   function addToCart(item, fromRestaurantId) {
-    // Prevent mixing items from different restaurants
     if (restaurantId && restaurantId !== fromRestaurantId) {
       const confirmClear = window.confirm(
         "Your cart has items from a different restaurant. Clear cart and add this item instead?"
@@ -52,7 +51,13 @@ export function CartProvider({ children }) {
           i.menu_item_id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      return [...prev, { menu_item_id: item.id, name: item.name, price: parseFloat(item.price), quantity: 1 }];
+      return [...prev, {
+        menu_item_id: item.id,
+        name: item.name,
+        price: parseFloat(item.price),
+        image_url: item.image_url || null,
+        quantity: 1,
+      }];
     });
   }
 
