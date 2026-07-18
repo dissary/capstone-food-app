@@ -3,7 +3,7 @@ export default function Toast({ message, type = "success", onClose }) {
     <div
       className="position-fixed"
       style={{
-        bottom: "24px",
+        bottom: "70px",
         right: "24px",
         zIndex: 2000,
         backgroundColor: type === "success" ? "var(--dinery-forest)" : "var(--dinery-red)",
